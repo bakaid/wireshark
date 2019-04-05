@@ -155,6 +155,10 @@ if ! add_package TESTDEPS_LIST softhsm2 '>= 2.3.0'; then
 	fi
 fi
 
+# Debian >= stretch-backports, Ubuntu >= 16.04
+add_package ADDITIONAL_LIST libbrotli-dev ||
+echo "libbrotli-dev is unavailable" >&2
+
 ACTUAL_LIST=$BASIC_LIST
 
 # Now arrange for optional support libraries

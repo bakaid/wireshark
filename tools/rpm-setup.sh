@@ -109,6 +109,19 @@ add_package() {
 	eval "${list}=\"\${${list}} \${pkgname}\""
 }
 
+# Adds packages $2-$n to list variable $1 if all the packages are found
+add_packages() {
+	local list="$1" pkgnames="${@:2}"
+
+	# fail if any package is not known
+	for pkgname in $pkgnames; do
+		$PM $PM_SEARCH "$pkgname" &> /dev/null || return 1
+	done
+
+	# all packages are found, append it to list
+	eval "${list}=\"\${${list}} \${pkgnames}\""
+}
+
 # python3: OpenSUSE 43.3, Fedora 26
 # python34: Centos 7
 add_package BASIC_LIST python3 || add_package BASIC_LIST python34 ||
@@ -147,6 +160,10 @@ echo "Qt5 multimedia is unavailable" >&2
 add_package BASIC_LIST libQt5PrintSupport-devel ||
 echo "Qt5 print support is unavailable" >&2
 
+# This in only required (and available) on OpenSUSE
+add_package BASIC_LIST update-desktop-files ||
+echo "update-desktop-files is unavailable" >&2
+
 add_package BASIC_LIST perl-podlators ||
 echo "perl-podlators unavailable" >&2
 
@@ -181,6 +198,9 @@ echo "ninja is unavailable" >&2
 
 add_package ADDITIONAL_LIST libxslt || add_package ADDITIONAL_LIST libxslt1 ||
 echo "xslt is unavailable" >&2
+
+add_package ADDITIONAL_LIST brotli-devel || add_packages ADDITIONAL_LIST libbrotli-devel libbrotlidec1 ||
+echo "brotli is unavailable" >&2
 
 ACTUAL_LIST=$BASIC_LIST
 
