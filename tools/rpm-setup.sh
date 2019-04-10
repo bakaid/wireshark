@@ -147,6 +147,10 @@ echo "Qt5 multimedia is unavailable" >&2
 add_package BASIC_LIST libQt5PrintSupport-devel ||
 echo "Qt5 print support is unavailable" >&2
 
+# This in only required (and available) on OpenSUSE
+add_package BASIC_LIST update-desktop-files ||
+echo "update-desktop-files is unavailable" >&2
+
 add_package BASIC_LIST perl-podlators ||
 echo "perl-podlators unavailable" >&2
 
