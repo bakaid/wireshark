@@ -2166,7 +2166,9 @@ install_all() {
 
     install_libtool
 
-    install_cmake
+#     install_cmake
+    brew update
+    brew install cmake
 
     install_ninja
 
@@ -2193,6 +2195,8 @@ install_all() {
     # by configuring pkg-config to use its own internal version of GLib.
     #
     install_pkg_config
+
+    install_brotli
 
     install_glib
 
@@ -2249,8 +2253,6 @@ install_all() {
     install_bcg729
 
     install_python3
-
-    install_brotli
 }
 
 uninstall_all() {
@@ -2267,8 +2269,6 @@ uninstall_all() {
         # We also do a "make distclean", so that we don't have leftovers from
         # old configurations.
         #
-        uninstall_brotli
-
         uninstall_python3
 
         uninstall_bcg729
@@ -2310,6 +2310,8 @@ uninstall_all() {
         uninstall_qt
 
         uninstall_glib
+
+        uninstall_brotli
 
         uninstall_pkg_config
 
