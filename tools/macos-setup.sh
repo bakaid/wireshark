@@ -1719,8 +1719,8 @@ install_brotli() {
         $no_build && echo "Skipping installation" && return
         gzcat brotli-$BROTLI_VERSION.tar.gz | tar xf - || exit 1
         cd brotli-$BROTLI_VERSION
-        mkdir build
-        cd build
+        mkdir build_dir
+        cd build_dir
         MACOSX_DEPLOYMENT_TARGET=$min_osx_target SDKROOT="$SDKPATH" cmake ../ || exit 1
         make $MAKE_BUILD_OPTS || exit 1
         $DO_MAKE_INSTALL || exit 1
