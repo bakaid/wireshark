@@ -113,8 +113,9 @@ clang-7-nopcap:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-rpm-centos-7:
+build:rpm-centos-7:
   <<: *rpm
+  stage: build
   image: centos:7
   script:
     - yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -123,8 +124,18 @@ rpm-centos-7:
     - cd build
     - cmake3 -GNinja ..
     - ninja-build rpm-package
-rpm-opensuse-42.3:
+test:rpm-centos-7:
+  stage: test
+  image: centos:7
+  script:
+    - yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    - yum --nogpgcheck localinstall -y build/packaging/rpm/RPMS/x86_64/*.rpm
+    - tshark --version
+  dependencies:
+    - build:rpm-centos-7
+build:rpm-opensuse-42.3:
   <<: *rpm
+  stage: build
   image: opensuse:42.3
   script:
     - zypper --non-interactive install update-desktop-files
@@ -134,8 +145,17 @@ rpm-opensuse-42.3:
     - cd build
     - cmake -GNinja ..
     - ninja rpm-package
-rpm-fedora-28:
+test:rpm-opensuse-42.3:
+  stage: test
+  image: opensuse:42.3
+  script:
+    - zypper install build/packaging/rpm/RPMS/x86_64/*.rpm
+    - tshark --version
+  dependencies:
+    - build:rpm-opensuse-42.3
+build:rpm-fedora-28:
   <<: *rpm
+  stage: build
   image: fedora:28
   script:
     - dnf upgrade -y
@@ -144,6 +164,14 @@ rpm-fedora-28:
     - cd build
     - cmake3 -GNinja ..
     - ninja-build rpm-package
+test:rpm-fedora-28:
+  stage: test
+  image: fedora:28
+  script:
+    - dnf install build/packaging/rpm/RPMS/x86_64/*.rpm
+    - tshark --version
+  dependencies:
+    - build:rpm-fedora-28
 after_script:
   - for builddir in build/packaging/rpm/BUILD/wireshark-*/build build/packaging/rpm/BUILD/wireshark-* build; do [ ! -d "$builddir" ] || break; done
   - if [ "$CI_JOB_NAME" = "rpm-opensuse-42.3" ]; then export LD_LIBRARY_PATH=$builddir/run; fi
