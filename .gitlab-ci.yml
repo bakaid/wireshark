@@ -1,4 +1,5 @@
 .ubuntu: &ubuntu
+  stage: build
   image: crondaemon/wireshark
   retry: 1
   before_script:
@@ -19,11 +20,12 @@
     - mkdir build
     - cd build
 .rpm: &rpm
+  stage: build
   artifacts:
     paths:
       - build/packaging/rpm/RPMS
     expire_in: 3 days
-build:gcc-4:
+gcc-4:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-4.9 g++-4.9 -y
@@ -32,7 +34,7 @@ build:gcc-4:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:gcc-5:
+gcc-5:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-5 g++-5 -y
@@ -41,7 +43,7 @@ build:gcc-5:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:gcc-6:
+gcc-6:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-6 g++-6 -y
@@ -50,7 +52,7 @@ build:gcc-6:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:gcc-7:
+gcc-7:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-7 g++-7 -y
@@ -59,7 +61,7 @@ build:gcc-7:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:gcc-8:
+gcc-8:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-8 g++-8 -y
@@ -68,7 +70,7 @@ build:gcc-8:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:gcc-8-nopcap:
+gcc-8-nopcap:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-8 g++-8 -y
@@ -77,7 +79,7 @@ build:gcc-8-nopcap:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:clang-5:
+clang-5:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps clang-5.0 -y
@@ -86,7 +88,7 @@ build:clang-5:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:clang-6:
+clang-6:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps clang-6.0 -y
@@ -95,7 +97,7 @@ build:clang-6:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-build:clang-7:
+clang-7:
   <<: *ubuntu
   script:
      - ../tools/debian-setup.sh --install-optional --install-test-deps clang-7 -y
@@ -104,7 +106,7 @@ build:clang-7:
      - ninja test-programs
      - chown -R user .
      - su user -c pytest
-build:clang-7-nopcap:
+clang-7-nopcap:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps clang-7 -y
@@ -115,7 +117,6 @@ build:clang-7-nopcap:
     - su user -c pytest
 build:rpm-centos-7:
   <<: *rpm
-  stage: build
   image: centos:7
   script:
     - yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -135,7 +136,6 @@ test:rpm-centos-7:
     - build:rpm-centos-7
 build:rpm-opensuse-42.3:
   <<: *rpm
-  stage: build
   image: opensuse:42.3
   script:
     - zypper --non-interactive install update-desktop-files
@@ -155,7 +155,6 @@ test:rpm-opensuse-42.3:
     - build:rpm-opensuse-42.3
 build:rpm-fedora-28:
   <<: *rpm
-  stage: build
   image: fedora:28
   script:
     - dnf upgrade -y
