@@ -23,7 +23,7 @@
     paths:
       - build/packaging/rpm/RPMS
     expire_in: 3 days
-gcc-4:
+build:gcc-4:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-4.9 g++-4.9 -y
@@ -32,7 +32,7 @@ gcc-4:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-gcc-5:
+build:gcc-5:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-5 g++-5 -y
@@ -41,7 +41,7 @@ gcc-5:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-gcc-6:
+build:gcc-6:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-6 g++-6 -y
@@ -50,7 +50,7 @@ gcc-6:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-gcc-7:
+build:gcc-7:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-7 g++-7 -y
@@ -59,7 +59,7 @@ gcc-7:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-gcc-8:
+build:gcc-8:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-8 g++-8 -y
@@ -68,7 +68,7 @@ gcc-8:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-gcc-8-nopcap:
+build:gcc-8-nopcap:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps gcc-8 g++-8 -y
@@ -77,7 +77,7 @@ gcc-8-nopcap:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-clang-5:
+build:clang-5:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps clang-5.0 -y
@@ -86,7 +86,7 @@ clang-5:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-clang-6:
+build:clang-6:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps clang-6.0 -y
@@ -95,7 +95,7 @@ clang-6:
     - ninja test-programs
     - chown -R user .
     - su user -c pytest
-clang-7:
+build:clang-7:
   <<: *ubuntu
   script:
      - ../tools/debian-setup.sh --install-optional --install-test-deps clang-7 -y
@@ -104,7 +104,7 @@ clang-7:
      - ninja test-programs
      - chown -R user .
      - su user -c pytest
-clang-7-nopcap:
+build:clang-7-nopcap:
   <<: *ubuntu
   script:
     - ../tools/debian-setup.sh --install-optional --install-test-deps clang-7 -y
