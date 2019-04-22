@@ -134,9 +134,8 @@ test:rpm-centos-7:
     - tshark --version
   dependencies:
     - build:rpm-centos-7
-build:rpm-opensuse-42.3:
+.build:rpm-opensuse: &build:rpm-opensuse
   <<: *rpm
-  image: opensuse:42.3
   script:
     - zypper --non-interactive install update-desktop-files
     - tools/rpm-setup.sh --install-optional ruby
@@ -145,17 +144,29 @@ build:rpm-opensuse-42.3:
     - cd build
     - cmake -GNinja ..
     - ninja rpm-package
-test:rpm-opensuse-42.3:
+.test:rpm-opensuse: &test:rpm-opensuse
   stage: test
-  image: opensuse:42.3
   script:
-    - zypper install build/packaging/rpm/RPMS/x86_64/*.rpm
+    - zypper --no-gpg-checks install -y build/packaging/rpm/RPMS/x86_64/*.rpm
     - tshark --version
+build:rpm-opensuse-42.3:
+  <<: *build:rpm-opensuse
+  image: opensuse:42.3
+test:rpm-opensuse-42.3:
+  <<: *test:rpm-opensuse
+  image: opensuse:42.3
   dependencies:
     - build:rpm-opensuse-42.3
-build:rpm-fedora-28:
+build:rpm-opensuse-15.0:
+  <<: *build:rpm-opensuse
+  image: opensuse/leap:15.0
+test:rpm-opensuse-15.0:
+  <<: *test:rpm-opensuse
+  image: opensuse/leap:15.0
+  dependencies:
+    - build:rpm-opensuse-15.0
+.build:rpm-fedora: &build:rpm-fedora
   <<: *rpm
-  image: fedora:28
   script:
     - dnf upgrade -y
     - tools/rpm-setup.sh --install-optional -y
@@ -163,14 +174,27 @@ build:rpm-fedora-28:
     - cd build
     - cmake3 -GNinja ..
     - ninja-build rpm-package
-test:rpm-fedora-28:
+.test:rpm-fedora: &test:rpm-fedora
   stage: test
-  image: fedora:28
   script:
-    - dnf install build/packaging/rpm/RPMS/x86_64/*.rpm
+    - dnf install -y build/packaging/rpm/RPMS/x86_64/*.rpm
     - tshark --version
+build:rpm-fedora-28:
+  <<: *build:rpm-fedora
+  image: fedora:28
+test:rpm-fedora-28:
+  <<: *test:rpm-fedora
+  image: fedora:28
   dependencies:
     - build:rpm-fedora-28
+build:rpm-fedora-29:
+  <<: *build:rpm-fedora
+  image: fedora:29
+test:rpm-fedora-28:
+  <<: *test:rpm-fedora
+  image: fedora:29
+  dependencies:
+    - build:rpm-fedora-29
 after_script:
   - for builddir in build/packaging/rpm/BUILD/wireshark-*/build build/packaging/rpm/BUILD/wireshark-* build; do [ ! -d "$builddir" ] || break; done
   - if [ "$CI_JOB_NAME" = "rpm-opensuse-42.3" ]; then export LD_LIBRARY_PATH=$builddir/run; fi
