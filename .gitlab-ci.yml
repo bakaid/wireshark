@@ -134,7 +134,7 @@ test:rpm-centos-7:
     - tshark --version
   dependencies:
     - build:rpm-centos-7
-.build:rpm-opensuse: &build:rpm-opensuse
+.build-rpm-opensuse: &build-rpm-opensuse
   <<: *rpm
   script:
     - zypper --non-interactive install update-desktop-files
@@ -144,28 +144,28 @@ test:rpm-centos-7:
     - cd build
     - cmake -GNinja ..
     - ninja rpm-package
-.test:rpm-opensuse: &test:rpm-opensuse
+.test-rpm-opensuse: &test-rpm-opensuse
   stage: test
   script:
     - zypper --no-gpg-checks install -y build/packaging/rpm/RPMS/x86_64/*.rpm
     - tshark --version
 build:rpm-opensuse-42.3:
-  <<: *build:rpm-opensuse
+  <<: *build-rpm-opensuse
   image: opensuse:42.3
 test:rpm-opensuse-42.3:
-  <<: *test:rpm-opensuse
+  <<: *test-rpm-opensuse
   image: opensuse:42.3
   dependencies:
     - build:rpm-opensuse-42.3
 build:rpm-opensuse-15.0:
-  <<: *build:rpm-opensuse
+  <<: *build-rpm-opensuse
   image: opensuse/leap:15.0
 test:rpm-opensuse-15.0:
-  <<: *test:rpm-opensuse
+  <<: *test-rpm-opensuse
   image: opensuse/leap:15.0
   dependencies:
     - build:rpm-opensuse-15.0
-.build:rpm-fedora: &build:rpm-fedora
+.build-rpm-fedora: &build-rpm-fedora
   <<: *rpm
   script:
     - dnf upgrade -y
@@ -174,24 +174,24 @@ test:rpm-opensuse-15.0:
     - cd build
     - cmake3 -GNinja ..
     - ninja-build rpm-package
-.test:rpm-fedora: &test:rpm-fedora
+.test-rpm-fedora: &test-rpm-fedora
   stage: test
   script:
     - dnf install -y build/packaging/rpm/RPMS/x86_64/*.rpm
     - tshark --version
 build:rpm-fedora-28:
-  <<: *build:rpm-fedora
+  <<: *build-rpm-fedora
   image: fedora:28
 test:rpm-fedora-28:
-  <<: *test:rpm-fedora
+  <<: *test-rpm-fedora
   image: fedora:28
   dependencies:
     - build:rpm-fedora-28
 build:rpm-fedora-29:
-  <<: *build:rpm-fedora
+  <<: *build-rpm-fedora
   image: fedora:29
 test:rpm-fedora-28:
-  <<: *test:rpm-fedora
+  <<: *test-rpm-fedora
   image: fedora:29
   dependencies:
     - build:rpm-fedora-29
