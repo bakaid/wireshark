@@ -190,7 +190,7 @@ test:rpm-fedora-28:
 build:rpm-fedora-29:
   <<: *build-rpm-fedora
   image: fedora:29
-test:rpm-fedora-28:
+test:rpm-fedora-29:
   <<: *test-rpm-fedora
   image: fedora:29
   dependencies:
